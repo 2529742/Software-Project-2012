@@ -6,6 +6,9 @@
 //document.body.innerHTML += '<div id="gVContainer" class="popup" ><input id="googleVoice" type="text" x-webkit-grammar="grammar.grxml" onwebkitspeechchange="onChange(this.value)" x-webkit-speech /></div>';
 
 //this is the div for googleVoice
+
+
+// here is the test from wenkaidai
 var gvContainer = document.createElement('div');
 gvContainer.setAttribute('id', 'gvContainer');
 gvContainer.setAttribute('class', 'popup');
