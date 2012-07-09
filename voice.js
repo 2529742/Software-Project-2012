@@ -6,9 +6,6 @@
 //document.body.innerHTML += '<div id="gVContainer" class="popup" ><input id="googleVoice" type="text" x-webkit-grammar="grammar.grxml" onwebkitspeechchange="onChange(this.value)" x-webkit-speech /></div>';
 
 //this is the div for googleVoice
-
-
-// here is the test from wenkaidai
 var gvContainer = document.createElement('div');
 gvContainer.setAttribute('id', 'gvContainer');
 gvContainer.setAttribute('class', 'popup');
@@ -36,15 +33,42 @@ gvContainer.appendChild(closeButton);
 gvContainer.appendChild(googleVoice);
 document.body.appendChild(gvContainer);
 
-//this appends the Spoken Interaction Functionaloty to all img elements in the page
+var focusElement = "";
+
+var imageParent;
+var image;
+var imageId = "ThisIsImageNo";
+var imageNo = 1;
+
+//this appends the Spoken Interaction Functionality to all img-elements in the DOM
 var images = document.getElementsByTagName('img');
-for(var i = 0; i < images.length; i++) {
-    images[i].addEventListener("click", function() {
+for (var i = 0; i < images.length; i++) {
+    images[i].addEventListener("click", function(event) {
+        focusElement = "image";
+        image = event.target;
+        imageParent = image.parentElement;
         makeInputVisible(googleVoice, gvContainer)
     }, false);
 };
 
-//this should lock the screen during spoken output
+var textId = "ThisIsTextNo";
+var textNo = 1;
+
+var text;
+var textParent;
+
+var spans = document.getElementsByTagName('span');
+for (var i = 0; i < spans.length; i++) {
+    spans[i].addEventListener("mouseup", function() {
+        focusElement = "text";
+        makeInputVisible(googleVoice, gvContainer);
+        var selection = window.getSelection();
+        text = selection.toString();
+        textParent = $(selection.focusNode.parentElement);
+    }, false);
+};
+
+//this locks the screen during spoken output
 var lockingScreen = document.createElement('div');
 var screenInfo = document.createElement('p');
 lockingScreen.setAttribute('id', 'lockScreen');
@@ -98,7 +122,7 @@ function makeInputInvisible(inputElement, containerElement) {
 
 function onChange() {
     //this function processes what the user said with js-chartparser
-    if( typeof (prevClickedElement) !== 'undefined') {
+    if ( typeof (prevClickedElement) !== 'undefined') {
         prevClickedElement = clickedElement;
         clickedElement = event.target;
     } else {
@@ -115,9 +139,11 @@ function onChange() {
 
 function dialogueManager(results, val) {
     //this function imitates a dialogue manager and handles diverse errors or unparseable user input
-    if(parseInt(results[0]) == 0) {
 
-        if(clickedElement == prevClickedElement && clickCounter >= 3) {
+    //triggered if grammar rejects input
+    if (parseInt(results[0]) == 0) {
+        //triggered if for the same element the input is rejected 3 times
+        if (clickedElement == prevClickedElement && clickCounter >= 3) {
             makeInputInvisible(googleVoice, gvContainer);
             alert('This was wrong too many times');
             makeInputVisible(altInput, altInputContainer);
@@ -130,15 +156,70 @@ function dialogueManager(results, val) {
         }
 
     }
-
-    if(parseInt(results[0]) >= 1) {
-        n = parseInt(results[0])
-        for(var i = 1; i < n; i++) {
-            alert("result " + i + ": " + results[i]);
-        };
+    //triggered if input is accepted
+    if (parseInt(results[0]) >= 1) {
+        if (focusElement == "text") {
+            annotateText(results);
+        }
+        if (focusElement == "image") {
+            annotateImage(results);
+        }
         clickCounter = 0;
 
     }
+}
+
+function annotateText(annotations) {
+    if ($(textParent).is('.highlight')) {
+        alert('already annotated');
+    } else {
+        var oldHtml = textParent.html();
+        var newHtml = oldHtml.replace(text, "<span id='" + textId + textNo + "' class='highlight'>" + text + "</span>");
+        textParent.html(newHtml);
+        var element = document.getElementById(textId + textNo);
+    }
+
+    element.onmouseover = function() {
+        var tipText = "";
+        for (var i = 1; i < parseInt(annotations[0]); i++) {
+            alert(annotations[i]);
+            tipText += annotations[i] + '<br>';
+        };
+
+        XBT(event.target, {text:tipText,className:'xbtooltip'});
+    };
+
+    textNo++;
+}
+
+function annotateImage(annotations){
+    if ($(imageParent).is('.highlight')) {
+        alert('already annotated');
+    } else {
+        var oldChild = image;
+        oldChild.setAttribute('id', 'y u no there');
+        imageParent.setAttribute('id', 'y u no there');
+        var newChild = document.createElement('div');
+        newChild.setAttribute('class', 'highlight');
+        newChild.setAttribute('id', imageId+imageNo);
+        var copy = oldChild.cloneNode(true);
+        newChild.appendChild(copy);
+        imageParent.replaceChild(newChild, oldChild);
+        var element = document.getElementById(imageId + imageNo);
+    }
+
+    element.onmouseover = function() {
+        var tipText = "";
+        for (var i = 1; i < parseInt(annotations[0]); i++) {
+            alert(annotations[i]);
+            tipText += annotations[i] + '<br>';
+        };
+
+        //XBT(this, {text:tipText,className:'xbtooltip'});
+    };
+
+    textNo++;
+
 }
 
 function speekOutput(customMessage, status) {
@@ -150,8 +231,8 @@ function speekOutput(customMessage, status) {
     //generate an output string for the MaryTTS
     var str = '';
     var messageArray = customMessage.split(/\s+/);
-    for(var i = 0; i < messageArray.length; i++) {
-        if(i == messageArray.length - 1) {
+    for (var i = 0; i < messageArray.length; i++) {
+        if (i == messageArray.length - 1) {
             str += messageArray[i];
         } else {
             str += messageArray[i] + "+";
@@ -161,11 +242,11 @@ function speekOutput(customMessage, status) {
     var speek = "";
     var write = "";
 
-    if(status == 'unparseable') {
+    if (status == 'unparseable') {
         write += 'I am sorry, I could not understand what "' + customMessage + '" is supposed to mean! Please rephrase your command!';
         speek += "I'm%20sorry%2C%20I%20could%20not%20understand%20what%20%22" + str + "%22%20is%20supposed%20to%20mean.%20Please%20rephrase%20your%20command.";
     }
-    if(status == 'error') {
+    if (status == 'error') {
         write += "Sorry, there was an unexpected error";
         speek += str;
     }
@@ -178,21 +259,21 @@ function speekOutput(customMessage, status) {
         dataType : 'jsonp audio/x-wav',
         statusCode : {
             404 : function() {
-                if(status == 'unparseable') {
+                if (status == 'unparseable') {
                     alert(write);
                 }
-                if(status == 'error') {
+                if (status == 'error') {
                     alert(write);
                 }
             },
             200 : function() {
-                
+
                 spokenOutput.load();
 
-                if(status == 'unparseable') {
+                if (status == 'unparseable') {
                     lockScreen(write);
                 }
-                if(status == 'error') {
+                if (status == 'error') {
                     lockScreen(write);
                 }
 

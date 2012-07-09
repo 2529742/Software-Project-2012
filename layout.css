@@ -65,3 +65,17 @@ input.popup {
     border-color: white;
     border-style: inset; 
 }
+
+span.highlight{
+    border: 1px black dotted;
+}
+
+div.highlight{
+    border: 1px red dotted;
+}
+
+.xbtooltip {
+      display: none;
+      position: absolute;
+      background-color: #fff;
+    }
