@@ -181,41 +181,80 @@ function annotateText(annotations) {
 
     element.onmouseover = function() {
         var tipText = "";
-        for (var i = 1; i < parseInt(annotations[0]); i++) {
-            alert(annotations[i]);
-            tipText += annotations[i] + '<br>';
+        for (var i = 0; i < (parseInt(annotations[0])+1); i++) {
+            //alert(annotations[i]);
+            if(i > 0){
+                tipText += annotations[i] + '<br>';
+            }
         };
+        // Selects one or more elements to assign a simpletip to
+        $(event.target).simpletip({
 
-        XBT(event.target, {text:tipText,className:'xbtooltip'});
+            // Configuration properties
+            content : tipText,
+            fixed : true,
+            position : 'right',
+            showEffect : 'custom',
+            showCustom : function() {
+                // Note the this attribute refers to the tooltip itself
+                $(this).css({
+                    fontSize : '12px',
+                    display : 'block'
+                }).animate({
+                    fontSize : '20px'
+                }, 400);
+            }
+        });
     };
 
     textNo++;
 }
 
-function annotateImage(annotations){
+function annotateImage(annotations) {
     if ($(imageParent).is('.highlight')) {
         alert('already annotated');
     } else {
         var oldChild = image;
-        oldChild.setAttribute('id', 'y u no there');
-        imageParent.setAttribute('id', 'y u no there');
+        var width = oldChild.clientWidth;
+        var height = oldChild.clientHeight;
         var newChild = document.createElement('div');
         newChild.setAttribute('class', 'highlight');
-        newChild.setAttribute('id', imageId+imageNo);
+        newChild.setAttribute('id', imageId + imageNo);
+        newChild.style.width = width+'px';
+        newChild.style.height = height+'px';
         var copy = oldChild.cloneNode(true);
         newChild.appendChild(copy);
         imageParent.replaceChild(newChild, oldChild);
         var element = document.getElementById(imageId + imageNo);
+        
     }
 
     element.onmouseover = function() {
         var tipText = "";
-        for (var i = 1; i < parseInt(annotations[0]); i++) {
-            alert(annotations[i]);
-            tipText += annotations[i] + '<br>';
+        for (var i = 0; i < (parseInt(annotations[0])+1); i++) {
+            //alert(annotations[i]);
+            if(i > 0){
+                tipText += annotations[i] + '<br>';
+            }
         };
+        // Selects one or more elements to assign a simpletip to
+        $(event.target).simpletip({
 
-        //XBT(this, {text:tipText,className:'xbtooltip'});
+            // Configuration properties
+            content : 'test',
+            fixed : true,
+            position : 'right',
+            showEffect : 'custom',
+            showCustom : function() {
+                // Note the this attribute refers to the tooltip itself
+                $(this).css({
+                    fontSize : '12px',
+                    display : 'block'
+                }).animate({
+                    fontSize : '20px'
+                }, 400);
+            }
+        });
     };
 
     textNo++;

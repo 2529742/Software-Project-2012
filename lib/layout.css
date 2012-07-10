@@ -71,11 +71,16 @@ span.highlight{
 }
 
 div.highlight{
+    z-index: -3;
     border: 1px red dotted;
 }
 
-.xbtooltip {
-      display: none;
-      position: absolute;
-      background-color: #fff;
-    }
+.tooltip{
+   position: absolute;
+   top: 0;
+   left: 0;
+   z-index: 5;
+   display: none;
+   border: 1px black dotted;
+   background-color: white;
+}
