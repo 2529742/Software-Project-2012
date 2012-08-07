@@ -22,13 +22,17 @@ input.popup {
 }
 
 table.popup {
-    position: fixed;
+    position: relative;
     top: 5%;
     left: 50%;
     margin-left: -200px;
     background-color: white;
     max-width: 400px;
+    max-height: 400px;
+    height: 100%;
     width: 400px;
+    z-index: 999;
+    overflow: scroll;
     
 }
 tr.popup{
@@ -42,6 +46,14 @@ tr.popup{
     margin-top: -50px;
     float:right;
     margin-right: 150px;
+}
+
+#loadingSpinner {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    margin-top: -175px;
+    margin-left: -175px;
 }
 
 #annotateButton{
@@ -80,11 +92,25 @@ tr.popup{
     left: 50%;
     margin-left: -250px;
     margin-top: -100px;
+    padding: 15px;
     color: red;
     font-size: 2.5em;
     border-width: 0.05em;
     border-color: white;
     border-style: inset; 
+}
+
+#tableContainer{
+    position: fixed;
+    top: 5%;
+    left: 50%;
+    margin-left: -200px;
+    max-width: 500px;
+    max-height: 400px;
+    height: 400px;
+    width: 500px;
+    overflow-y: scroll;
+    z-index: 999;
 }
 
 span.highlight{
@@ -106,4 +132,6 @@ div.highlight{
    display: none;
    border: 1px black;
    background-color: orange;
+   font-size: 14;
+    padding: 15px;
 }
