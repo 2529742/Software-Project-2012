@@ -39,6 +39,13 @@ tr.popup{
     max-width: 380px;
 }
 
+legend.popup{
+    font-size: 18;
+    font-weight: bold;
+    color: red;
+    text-align: center;
+}
+
 #altInputSubmit {
     position: fixed;
     top: 50%;

@@ -48,8 +48,7 @@ altInputSubmit.setAttribute('type', 'submit');
 altInputSubmit.setAttribute('value', 'Tag it!');
 altInputSubmit.onclick = function() {
     var val = altInput.value
-    val.toLowerCase();
-    var results = runParser(val.split(/\s+/));
+    var results = runParser(val.toLowerCase().split(/\s+/));
     dialogueManager(results, val);
 };
 altInputContainer.appendChild(altInput);
@@ -63,7 +62,7 @@ screenInfo.style.visibility = 'hidden';
 //this is the radio button checkbox
 var title = document.createElement('legend');
 title.setAttribute('class', 'popup');
-title.innerHTML = "Pleasy choose the correct annotation";
+title.innerHTML = "Please choose the correct annotation";
 var table = document.createElement('table');
 table.setAttribute('class', 'popup');
 var checkboxAnnotations = [];
@@ -283,9 +282,8 @@ function onChange() {
     }
 
     var val = event.target.value;
-    alert("you said:" + val);
-    val.toLowerCase();
-    results = runParser(val.split(/\s+/));
+    console.log("you said:" + val);
+    results = runParser(val.toLowerCase().split(/\s+/));
     dialogueManager(results, val);
 }
 
@@ -409,34 +407,6 @@ function getAnnotation(grammarResults, callback) {
             });
         });
     });
-
-    /**
-     var annoText = "";
-
-     for (var i = 0; i < (parseInt(grammarResults[0]) + 1); i++) {
-     if (i > 0) {
-     annoText += grammarResults[i] + " is great. "
-     }
-     };
-     $('#analyze_me').text(annoText);
-
-     vie.analyze({
-     element : $('#analyze_me')
-     }).using("stanbol").done(function(ent) {
-     _.each(ent, function(e) {
-     var url = e.getSubjectUri();
-     var label = VIE.Util.getPreferredLangForPreferredProperty(e, ['rdfs:label'], ['en', 'de']);
-     if (label === 'n/a') {
-     return true;
-     }
-     //jQuery('#result').append(jQuery('<a target="_blank" href="' + url + '">' + label + '</a><br />'));
-     annotations.push('<a target="_blank" href="' + url + '">' + label + '</a><br />');
-     console.log(annotations);
-     });
-     callback(annotations);
-     }).execute();
-
-     **/
 }
 
 function useCheckbox(VIEannotations) {
@@ -469,9 +439,7 @@ function useCheckbox(VIEannotations) {
 }
 
 function buildTip(VIEannotations, highlightedElement) {
-    // Selects one or more elements to assign a simpletip to
-
-    console.log('tip is initialized with text: ' + VIEannotations);
+    // Selects one or more elements to assign a simple tooltip to
 
     var tip = document.createElement('div');
     tip.innerHTML = VIEannotations;
